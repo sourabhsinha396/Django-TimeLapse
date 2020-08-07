@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+<div class="container">
+	<form method="POST">
+		{% csrf_token %}
+		{{form}}
+		<button type="submit" class="btn btn-dark my-2">Analyze</button>
+	</form>
+
+	<div>
+			<table class="table table-striped my-5">
+			  <thead>
+			    <tr>
+			      <th scope="col">S. No.</th>
+			      <th scope="col">Project</th>
+			      <th scope="col">Task</th>
+			      <th scope="col">Time Taken</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  	{% for obj in object_list %}
+			    <tr>
+			      <th scope="row">{{forloop.counter}}</th>
+			      <td>{{obj.project}}</td>
+			      <td>{{obj.task_name}}</td>
+			      <td>{{obj.get_time_difference}}</td>
+			    </tr>
+			    {% endfor %}
+			  </tbody>
+			</table>
+	</div>
+</div>
+{% endblock %}

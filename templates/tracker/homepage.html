@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+<div class="container" style="margin-top: 100px;margin-bottom: 400px">
+	<form method="POST">
+		{% csrf_token %}
+		{{form.as_p}}
+		<button type="submit" class="btn btn-dark">Create Project</button>
+	</form>
+
+
+	
+		{% if already_existing_projects|length > 0 %}
+	<div>
+		<table class="table table-striped my-5">
+		  <thead>
+		    <tr>
+		      <th scope="col">S. No.</th>
+		      <th scope="col">Existing Projects</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  	{% for obj in already_existing_projects %}
+		    <tr>
+		      <th scope="row">{{forloop.counter}}</th>
+		      <td>{{obj.project}}</td>
+		    </tr>
+		    {% endfor %}
+
+		  </tbody>
+		</table>
+
+	</div>
+
+	<span>
+		<a href="/track/"><button class="btn btn-dark">Start Tracking</button>
+		</a>
+	</span>
+	{% endif %}
+
+</div>
+{% endblock %}

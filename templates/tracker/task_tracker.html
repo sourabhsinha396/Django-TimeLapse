@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+<div class="container" style="margin-top: 100px;margin-bottom: 400px">
+	<form id="trackingForm">
+		{% csrf_token %}
+		{{form.as_p}}
+		<button type="submit" class="btn btn-dark">Start Tracking</button>
+	</form>
+
+	<button type="submit" class="btn btn-outline-danger my-2" onclick="endThisTask()">
+		End Task
+	</button>
+	<div id="msg-box"></div>
+
+	<h1>
+		<span class="badge badge-info my-5">
+			<div class="time text-white"></div>
+		</span>
+	</h1>
+</div>
+{% endblock %}
+
+
+
+{% block scripts %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		var myForm = $("#trackingForm")
+		var timer = true;
+		var startTime;
+
+		myForm.submit(function(event){
+			event.preventDefault();
+			var token = "{{csrf_token}}";
+			var actionEndpoint = {% url 'start' %};
+			var thisForm = myForm;
+			var httpMethod = "POST";
+			var taskMe = $('#task-me').val()
+			var projectMe = $('#project-me').val();
+			var formData = {'task_name':taskMe,'project':projectMe};
+			$.ajax({
+				url:actionEndpoint,
+				method:httpMethod,
+				headers: { "X-CSRFToken": token },
+				data: formData,
+				success:
+				function(data){
+					console.log(data);
+					if(data.startTimer){
+						startTimer();
+					}
+					document.getElementById('msg-box').innerHTML = `<p class="text-info">${data.msg}</p>`;
+				},
+				error:function(data){
+					console.log(data);
+				}
+			})
+		})
+
+	})
+
+		
+		
+
+		function display() {
+			if (timer){
+		    // later record end time
+		    var endTime = new Date();
+
+		    // time difference in ms
+		    var timeDiff = endTime - startTime;
+
+		    // strip the miliseconds
+		    timeDiff /= 1000;
+
+		    // get seconds
+		    var seconds = Math.round(timeDiff % 60);
+
+		    // remove seconds from the date
+		    timeDiff = Math.floor(timeDiff / 60);
+
+		    // get minutes
+		    var minutes = Math.round(timeDiff % 60);
+
+		    // remove minutes from the date
+		    timeDiff = Math.floor(timeDiff / 60);
+
+		    // get hours
+		    var hours = Math.round(timeDiff % 24);
+
+		    // remove hours from the date
+		    timeDiff = Math.floor(timeDiff / 24);
+
+		    // the rest of timeDiff is number of days
+		    var days = timeDiff;
+
+		    $(".time").text(days + " days, " + hours + ":" + minutes + ":" + seconds);
+		    setTimeout(display, 1000);
+		}
+		}
+
+		function startTimer() {
+			
+		    startTime = new Date();
+		    timer = setTimeout(display, 1000);
+			
+		}
+
+
+
+		function endThisTask(){
+		var token = "{{csrf_token}}";
+		var actionEndpoint = {% url 'end' %};
+		var httpMethod = "POST";
+		var taskMe = $('#task-me').val()
+		var projectMe = $('#project-me').val();
+		var formData = {'task_name':taskMe,'project':projectMe};
+		$.ajax({
+			url:actionEndpoint,
+			method:httpMethod,
+			headers: { "X-CSRFToken": token },
+			data: formData,
+			success:
+			function(data){
+				console.log(data);
+				timer = false;
+				document.getElementById('msg-box').innerHTML = `<p class="text-danger">${data.msg}</p>`;
+
+			
+			},
+			error:function(data){
+				console.log(data);
+			}
+		})
+		}
+
+</script>
+{% endblock %}

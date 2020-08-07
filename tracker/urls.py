@@ -8,4 +8,5 @@ urlpatterns = [
 	path('start/',views.start_tracking,name="start"),
 	path('end/',views.end_tracking,name="end"),
 	path('analyze/',views.track_my_progress,name="analyze"),
+	path('analyze-date/',views.analyze_by_date,name="analyze_date"),
 ]

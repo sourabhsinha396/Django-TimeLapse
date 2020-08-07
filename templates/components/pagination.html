@@ -1,0 +1,48 @@
+<div class="row ml-3">
+    <nav aria-label="...">
+     <ul class="pagination">
+       <li class="page-item">
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="page" value="1">
+            <input type="hidden" name="date" value="{{date|date:'Y-m-d'}}">
+            <button class="page-link">First</button>
+        </form>
+
+       </li>
+       {% ifnotequal page_obj.number 1 %}
+       <li class="page-item">
+         <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="page" value="{{page_obj.previous_page_number}}">
+            <input type="hidden" name="date" value="{{date|date:'Y-m-d'}}">
+            <button class="page-link">{{page_obj.previous_page_number}}</button>
+        </form>
+       </li>
+       {% endifnotequal %}
+       <li class="page-item active">
+         <span class="page-link">
+             {{ page_obj.number }}
+           <span class="sr-only">(current)</span>
+         </span>
+       </li>
+       {% ifnotequal page_obj.number page_obj.paginator.num_pages %}
+       <li class="page-item">
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="page" value="{{ page_obj.next_page_number}}">
+            <input type="hidden" name="date" value="{{date|date:'Y-m-d'}}">
+            <button class="page-link">{{ page_obj.next_page_number }}</button>
+        </form>
+       {% endifnotequal %}
+       <li class="page-item">
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="page" value="{{ page_obj.paginator.num_pages }}">
+            <input type="hidden" name="date" value="{{date|date:'Y-m-d'}}">
+            <button class="page-link">{{ page_obj.paginator.num_pages }}</button>
+        </form>
+       </li>
+     </ul>
+   </nav>
+ </div>

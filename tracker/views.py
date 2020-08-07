@@ -4,9 +4,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import datetime
+from django.core.paginator import Paginator
+
+
 # Imports from this app
 from .models import Project,TaskTracker
-from .forms import ProjectModelForm,TaskTrackerModelForm,AnalyzeModelForm
+from .forms import (ProjectModelForm,TaskTrackerModelForm,
+					AnalyzeModelForm,DatePickerForm)
 
 @login_required
 def homepage(request):
@@ -96,7 +100,6 @@ def track_my_progress(request):
 	if request.method == "POST":
 		project       = request.POST.get('project')
 		ended_tasks   = TaskTracker.objects.filter(user=user,project=project)
-		object_list   = []
 		form    = AnalyzeModelForm(request.POST)
 		context = {'object_list':ended_tasks,'form':form}
 		return render(request,'tracker/analyze.html',context)
@@ -106,3 +109,23 @@ def track_my_progress(request):
 		context       = {'form':form}
 		return render(request,'tracker/analyze.html',context)
 
+
+def analyze_by_date(request):
+	user              = request.user
+	ended_tasks       = "Tasks"
+	if request.method == "POST":
+		form          = DatePickerForm(request.POST)
+		date          = request.POST.get('date')
+		if form.is_valid():
+			date          = form.cleaned_data.get('date')  
+		ended_tasks   = TaskTracker.objects.filter(user=user,start_time__date__lte=date)
+		paginator = Paginator(ended_tasks,3) 
+		page_number = request.POST.get('page')
+		page_obj = paginator.get_page(page_number)
+		context = {'object_list':page_obj,'date':date,'form':form}
+		return render(request,'tracker/analyze_by_date.html',context)
+
+	if request.method == "GET":
+		form    = DatePickerForm()
+		context = {'form':form}
+		return render(request,'tracker/analyze_by_date.html',context)

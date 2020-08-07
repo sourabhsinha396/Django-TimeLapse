@@ -1,6 +1,6 @@
 from django import forms
 from .models import Project,TaskTracker
-
+from django.contrib.admin.widgets import AdminDateWidget
 
 class ProjectModelForm(forms.ModelForm):
 	class Meta:
@@ -48,3 +48,7 @@ class AnalyzeModelForm(forms.ModelForm):
 		self.user = kwargs.pop('user', None)
 		super(AnalyzeModelForm, self).__init__(*args, **kwargs)
 		self.fields['project'].queryset = Project.objects.filter(user = self.user)
+
+
+class DatePickerForm(forms.Form):
+	date   = forms.DateField(widget=forms.TextInput(attrs={'class': 'form-control','id':'datepicker','placeholder':'Please Select a Date'}))

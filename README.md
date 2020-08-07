@@ -1,4 +1,4 @@
-# An Ecommerce website made with Django ❤️
+# An Time-Tracker app made with Django ❤️
 
 ![Timelapse Demo](ProDemo.gif)
 

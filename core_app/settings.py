@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = '2ym^bmn6b_&kiqgg#!r9ahz6val1g6r6g!aw4x#@qr$i05rgh7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['dj-timelapse.herokuapp.com','127.0.0.1']
 

@@ -2,7 +2,7 @@
 
 ![Timelapse Demo](ProDemo.gif)
 
-**Demo: **
+### Demo: https://dj-timelapse.herokuapp.com/ 
 ***Technologies Used:***
 
     Django
